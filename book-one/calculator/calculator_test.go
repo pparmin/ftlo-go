@@ -79,8 +79,6 @@ func TestDivide(t *testing.T) {
 		} else if tc.errExpected == errReceived {
 			if tc.want != got {
 				t.Errorf("Divide(%f, %f): want %f, got %f", tc.a, tc.b, tc.want, got)
-			} else {
-				fmt.Printf("Test passed for Divide(%f, %f): want %f, got %f\n", tc.a, tc.b, tc.want, got)
 			}
 		}
 	}
@@ -106,8 +104,6 @@ func TestAddRandom(t *testing.T) {
 		for _, tc := range testCases {
 			if tc.want != got {
 				t.Errorf("Add(%f, %f): want %f, got %f", tc.a, tc.b, tc.want, got)
-			} else {
-				//fmt.Printf("Add(%f, %f): want %f, got %f --> Test successful!\n", tc.a, tc.b, tc.want, got)
 			}
 		}
 		i++
@@ -138,6 +134,42 @@ func TestSqrt(t *testing.T) {
 			}
 			if tc.want != got {
 				t.Errorf("Sqrt(%f): Result doesn't match expectation. want: %f, got: %f\n", tc.a, tc.want, got)
+			}
+		}
+	}
+}
+
+func TestEvaluate(t *testing.T) {
+	type testCaseEvaluator struct {
+		name        string
+		a, b        float64
+		want        float64
+		errExpected bool
+		operator    string
+	}
+
+	testCases := []testCaseEvaluator{
+		{name: "Add", a: 1, b: 1.5, want: 2.5, errExpected: false, operator: "+"},
+		{name: "Multiply", a: 2, b: 2, want: 4, errExpected: false, operator: "*"},
+		{name: "Divide", a: 18, b: 6, want: 3, errExpected: false, operator: "  /  "},
+		{name: "Subtract", a: 100, b: 0.1, want: 99.9, errExpected: false, operator: "-"},
+		//{name: "Divide", a: 4, b: 0, want: 0, errExpected: true, operator: "/"},
+	}
+
+	for _, tc := range testCases {
+		expression := fmt.Sprintf("%f %s %f", tc.a, tc.operator, tc.b)
+		got, err := calculator.Evaluate(expression)
+		errReceived := err != nil
+
+		if tc.errExpected != errReceived {
+			t.Fatalf("Evaluate(%f %s %f): unexpected error: %s", tc.a, tc.operator, tc.b, err)
+		} else if tc.errExpected == errReceived {
+			if err != nil {
+				t.Fatalf("Evaluate(%f %s %f): Expected Error received: %s", tc.a, tc.operator, tc.b, err)
+			}
+			if tc.want != got {
+				t.Errorf("Evaluate(%f %s %f): Result doesn't match expectation. want: %f, got: %f\n", tc.a,
+					tc.operator, tc.b, tc.want, got)
 			}
 		}
 	}

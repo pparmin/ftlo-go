@@ -1,10 +1,11 @@
-// Package calculator provides a library for
-// simple calculations in Go.
+// Package evalulator provides a library for
+// simple evaluations in Go.
 package calculator
 
 import (
 	"fmt"
 	"math"
+	"strconv"
 )
 
 // Add takes a variable amount of numbers and returns the
@@ -26,11 +27,11 @@ func Subtract(inputs ...float64) float64 {
 		// set original value to first input
 		if counter == 0 {
 			result = input
-			fmt.Printf("Subtract: i: %d Result is now %f\n", counter, result)
+			//fmt.Printf("Subtract: i: %d Result is now %f\n", counter, result)
 			counter++
 		} else {
 			result -= input
-			fmt.Printf("Subtract: i: %d Result is now %f\n", counter, result)
+			//fmt.Printf("Subtract: i: %d Result is now %f\n", counter, result)
 			counter++
 		}
 	}
@@ -58,11 +59,11 @@ func Divide(inputs ...float64) (float64, error) {
 		}
 		if counter == 0 {
 			result = input
-			fmt.Printf("Divide: i: %d Result is now %f\n", counter, result)
+			//fmt.Printf("Divide: i: %d Result is now %f\n", counter, result)
 			counter++
 		} else {
 			result /= input
-			fmt.Printf("Divide i: %d Result is now %f\n", counter, result)
+			//fmt.Printf("Divide i: %d Result is now %f\n", counter, result)
 			counter++
 		}
 	}
@@ -75,4 +76,95 @@ func Sqrt(a float64) (float64, error) {
 		return 0, fmt.Errorf("square root of negative value is undefined")
 	}
 	return math.Sqrt(a), nil
+}
+
+// Evaluate parses an arithmetic expression provided as a string and
+// performs the calculation. It then returns the result of the expression.
+func Evaluate(expression string) (float64, error) {
+	type evaluation struct {
+		placeholder string
+		buffer      string
+		mode        string
+		//nOfValues   int
+		// endOfExpression bool
+	}
+
+	eval := evaluation{
+		placeholder: "", buffer: "", mode: "",
+	}
+	fmt.Printf("Expression: %s\n", expression)
+	// var placeholder string = ""
+	// var buffer string
+	for _, char := range expression {
+		switch char {
+		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.':
+			eval.placeholder += string(char)
+		case ' ':
+			continue
+		case '+':
+			eval.mode = "Add"
+			eval.buffer = eval.placeholder
+			eval.placeholder = ""
+		case '-':
+			eval.mode = "Subtract"
+			eval.buffer = eval.placeholder
+			eval.placeholder = ""
+		case '*':
+			eval.mode = "Multiply"
+			eval.buffer = eval.placeholder
+			eval.placeholder = ""
+		case '/':
+			eval.mode = "Divide"
+			eval.buffer = eval.placeholder
+			eval.placeholder = ""
+		default:
+			return 0, fmt.Errorf("something went wrong while parsing the expression")
+		}
+	}
+
+	switch eval.mode {
+	case "Add":
+		firstValue, err := strconv.ParseFloat(eval.buffer, 64)
+		secondValue, errTwo := strconv.ParseFloat(eval.placeholder, 64)
+		if err != nil || errTwo != nil {
+			return 0, fmt.Errorf("%s(): conversion from string to float failed", eval.mode)
+		}
+		result := Add(firstValue, secondValue)
+		return result, nil
+
+	case "Subtract":
+		firstValue, err := strconv.ParseFloat(eval.buffer, 64)
+		secondValue, errTwo := strconv.ParseFloat(eval.placeholder, 64)
+
+		if err != nil || errTwo != nil {
+			return 0, fmt.Errorf("conversion from string to float failed")
+		}
+		result := Subtract(firstValue, secondValue)
+		return result, nil
+
+	case "Multiply":
+		firstValue, err := strconv.ParseFloat(eval.buffer, 64)
+		secondValue, errTwo := strconv.ParseFloat(eval.placeholder, 64)
+
+		if err != nil || errTwo != nil {
+			return 0, fmt.Errorf("conversion from string to float failed")
+		}
+		result := Multiply(firstValue, secondValue)
+		return result, nil
+
+	case "Divide":
+		firstValue, err := strconv.ParseFloat(eval.buffer, 64)
+		secondValue, errTwo := strconv.ParseFloat(eval.placeholder, 64)
+
+		if err != nil && errTwo != nil {
+			return 0, fmt.Errorf("conversion from string to float failed")
+		}
+		result, div_err := Divide(firstValue, secondValue)
+		if div_err != nil {
+			return result, fmt.Errorf("ERROR: Division by zero is undefined")
+		}
+		return result, nil
+	default:
+		return 0, fmt.Errorf("something went wrong while calculating the expression")
+	}
 }
