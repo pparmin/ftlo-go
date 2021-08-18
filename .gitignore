@@ -1,0 +1,5 @@
+# Ignore debug file
+**/__debug_bin
+
+# Ignore .sum files
+*.sum
