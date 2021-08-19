@@ -27,11 +27,9 @@ func Subtract(inputs ...float64) float64 {
 		// set original value to first input
 		if counter == 0 {
 			result = input
-			//fmt.Printf("Subtract: i: %d Result is now %f\n", counter, result)
 			counter++
 		} else {
 			result -= input
-			//fmt.Printf("Subtract: i: %d Result is now %f\n", counter, result)
 			counter++
 		}
 	}
@@ -59,11 +57,9 @@ func Divide(inputs ...float64) (float64, error) {
 		}
 		if counter == 0 {
 			result = input
-			//fmt.Printf("Divide: i: %d Result is now %f\n", counter, result)
 			counter++
 		} else {
 			result /= input
-			//fmt.Printf("Divide i: %d Result is now %f\n", counter, result)
 			counter++
 		}
 	}
@@ -85,16 +81,13 @@ func Evaluate(expression string) (float64, error) {
 		placeholder string
 		buffer      string
 		mode        string
-		//nOfValues   int
-		// endOfExpression bool
 	}
 
 	eval := evaluation{
 		placeholder: "", buffer: "", mode: "",
 	}
+
 	fmt.Printf("Expression: %s\n", expression)
-	// var placeholder string = ""
-	// var buffer string
 	for _, char := range expression {
 		switch char {
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.':
