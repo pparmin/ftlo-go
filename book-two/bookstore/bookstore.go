@@ -1,31 +1,20 @@
 package bookstore
 
-import "fmt"
+import (
+	"errors"
+)
 
 type Book struct {
 	Author      []string
 	Title       string
 	Description string
-	PriceCents  int
-	Edition     int
-	IsSeries    bool
-	NInSeries   bool
-	TitleSeries string
-	Featured    bool
+	Copies      int
 }
 
-var Books = []Book{{Title: "This is book 1"}, {Title: "This is book 2"}}
-
-func GetAllBooks() []Book {
-	fmt.Println("IN FUNCTION:", Books)
-	var AllBooks = []Book{{Title: "This is the function"}}
-	fmt.Println()
-	for _, book := range Books {
-		AllBooks = append(AllBooks, book)
+func Buy(b Book) (Book, error) {
+	if b.Copies == 0 {
+		return Book{}, errors.New("no copies left")
 	}
-	return AllBooks
+	b.Copies -= 1
+	return b, nil
 }
-
-var NewBooks = GetAllBooks()
-
-//fmt.Println(newBooks)

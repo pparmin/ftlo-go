@@ -2,7 +2,6 @@ package bookstore_test
 
 import (
 	"bookstore"
-	"fmt"
 	"testing"
 )
 
@@ -11,24 +10,27 @@ func TestBook(t *testing.T) {
 		Title:       "Spark Joy",
 		Author:      []string{"Marie Kondo"},
 		Description: "A tiny, cheerful Japanese woman explains tidying",
-		PriceCents:  1199,
-		Edition:     1,
-		IsSeries:    false,
-		Featured:    true,
 	}
 }
 
-func TestGetAllBooks(t *testing.T) {
-	book1 := bookstore.Book{Title: "This is Book 1"}
-	book2 := bookstore.Book{Title: "This is Book 2"}
-	bookstore.Books = []bookstore.Book{book1, book2}
+func TestBuy(t *testing.T) {
+	t.Parallel()
+	b := bookstore.Book{
+		Title:       "Test 1",
+		Author:      []string{"Marie Kondo"},
+		Description: "This is the first test",
+		Copies:      8,
+	}
 
-	want := bookstore.Books
-	fmt.Println("IN TEST", want)
-	got := bookstore.GetAllBooks()
-	fmt.Println("GOT: ", got)
+	result, err := bookstore.Buy(b)
+	want := b.Copies - 1
 
-	// if !cmp.Equal(want, got) {
-	// 	t.Error(cmp.Diff(want, got))
-	// }
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := result.Copies
+	if got != want {
+		t.Errorf("Buy: Wrong number of copies returned. Expected: %d, Got: %d\n",
+			want, got)
+	}
 }
