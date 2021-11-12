@@ -1,3 +1,6 @@
 # Ignore debug file
 **/__debug_bin
 
+# Ignore certain file types
+**.pdf
+**.out
