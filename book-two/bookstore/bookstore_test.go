@@ -109,3 +109,20 @@ func TestGetBook(t *testing.T) {
 		}
 	})
 }
+
+func TestNetPriceCents(t *testing.T) {
+	t.Parallel()
+
+	b := bookstore.Book{
+		Title:           "For the Love of Go",
+		PriceCents:      4000,
+		DiscountPercent: 50,
+	}
+	want := 2000
+	got := b.NetPriceCents()
+
+	if got != want {
+		t.Errorf("ERROR: The discounted price does not match the expectation")
+		t.Errorf("Original price: %d, discount: %d%%, wanted discounted price: %d, got: %d", b.PriceCents, b.DiscountPercent, want, got)
+	}
+}
