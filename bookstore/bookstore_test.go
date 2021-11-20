@@ -174,16 +174,23 @@ func TestSetCategory(t *testing.T) {
 		b := bookstore.Book{
 			Title: "For the Love of Go",
 		}
-		want := "Autobiography"
-		err := b.SetCategory("Autobiography")
 
-		if err != nil {
-			t.Fatal(err)
+		categories := []bookstore.Category{
+			bookstore.CategoryAutobiography,
+			bookstore.CategoryLargePrintRomance,
+			bookstore.CategoryParticlePhysics,
 		}
-		got := b.GetCategory()
 
-		if want != got {
-			t.Errorf("ERROR: Category mismatch. Expected %q, got: %q", want, b.GetCategory())
+		for _, cat := range categories {
+			err := b.SetCategory(cat)
+			if err != nil {
+				t.Fatal(err)
+			}
+			got := b.GetCategory()
+
+			if cat != got {
+				t.Errorf("ERROR: Category mismatch. Expected %d, got: %d", cat, b.GetCategory())
+			}
 		}
 	})
 
@@ -191,16 +198,10 @@ func TestSetCategory(t *testing.T) {
 		b := bookstore.Book{
 			Title: "For the Love of Go",
 		}
-		want := "Autobiography"
-		err := b.SetCategory("bogus")
+		err := b.SetCategory(999)
 
-		if err != nil {
+		if err == nil {
 			t.Fatal(err)
-		}
-		got := b.GetCategory()
-
-		if want != got {
-			t.Errorf("ERROR: Category mismatch. Expected %q, got: %q", want, b.GetCategory())
 		}
 	})
 }

@@ -5,6 +5,18 @@ import (
 	"fmt"
 )
 
+const (
+	CategoryAutobiography = iota
+	CategoryLargePrintRomance
+	CategoryParticlePhysics
+)
+
+var validCategory = map[Category]bool{
+	CategoryAutobiography:     true,
+	CategoryLargePrintRomance: true,
+	CategoryParticlePhysics:   true,
+}
+
 type Book struct {
 	ID              int
 	Author          []string
@@ -13,10 +25,12 @@ type Book struct {
 	Copies          int
 	PriceCents      int
 	DiscountPercent int
-	category        string
+	category        Category
 }
 
 type Catalog map[int]Book
+
+type Category int
 
 func Buy(b Book) (Book, error) {
 	if b.Copies == 0 {
@@ -55,14 +69,21 @@ func (b *Book) SetPriceCents(newPrice int) error {
 	return nil
 }
 
-func (b *Book) SetCategory(category string) error {
-	if category != "Autobiography" {
-		return fmt.Errorf("a non-existent category was passed. Category name: %q", category)
+func (b *Book) SetCategory(category Category) error {
+	if !validCategory[category] {
+		return fmt.Errorf("unknown category: %q", category)
 	}
-	b.category = category
+
+	/* My solution
+	/*switch category {
+	case CategoryAutobiography, CategoryLargePrintRomance, CategoryParticlePhysics:
+		b.category = category
+	default:
+		return fmt.Errorf("a non-existent category was passed")
+	}*/
 	return nil
 }
 
-func (b Book) GetCategory() string {
+func (b Book) GetCategory() Category {
 	return b.category
 }
