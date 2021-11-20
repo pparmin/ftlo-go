@@ -75,3 +75,15 @@ func TestStringUpperase(t *testing.T) {
 		t.Errorf("want %q, got %q", want, got)
 	}
 }
+
+func TestDouble(t *testing.T) {
+	t.Parallel()
+	var x mytypes.MyInt = 12
+	want := 24
+	p := &x
+	p.Double()
+
+	if want != int(x) {
+		t.Errorf("want %d, got %d", want, x)
+	}
+}
